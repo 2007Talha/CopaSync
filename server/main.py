@@ -29,10 +29,6 @@ except ImportError:
 # Lifespan context manager for modern FastAPI startup/shutdown
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Warm up / pre-generate the master telemetry dataset (5M rows) at startup
-    # This avoids heavy on-the-fly generation and significantly improves latency
-    get_benchmark_df(1000)
-    
     # Start the simulation loop
     task = asyncio.create_task(simulate_stadium_dynamics())
     yield
@@ -155,10 +151,6 @@ async def simulate_stadium_dynamics():
             print(f"Simulation loop error: {e}")
         await asyncio.sleep(1.5)
 
-@app.on_event("startup")
-async def startup_event():
-    asyncio.create_task(simulate_stadium_dynamics())
-
 # --- DTO MODELS ---
 class BenchmarkRequest(BaseModel):
     data_size: int = Field(default=1000000, ge=1000, le=50000000, description="Size of data to process")
@@ -183,9 +175,9 @@ def get_benchmark_df(size: int) -> pd.DataFrame:
     """
     global MASTER_DF
     if MASTER_DF is None:
-        # Pre-generate 5,000,000 telemetry pings at startup
-        MASTER_DF = generate_synthetic_pings(5000000)
-    if size <= 5000000:
+        # Pre-generate 1,000,000 telemetry pings lazily
+        MASTER_DF = generate_synthetic_pings(1000000)
+    if size <= 1000000:
         return MASTER_DF.iloc[:size]
     else:
         return generate_synthetic_pings(size)
