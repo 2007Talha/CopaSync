@@ -1,5 +1,7 @@
 # ⚽ CopaSync 2026: GenAI Stadium Operations & Fan Experience Control Center
 
+**🌐 Live URL:** [https://copasync-service-774652675635.us-central1.run.app](https://copasync-service-774652675635.us-central1.run.app)
+
 CopaSync 2026 is a premium **Data Intelligence & Multilingual Advisory Hub** designed for the FIFA World Cup 2026 at MetLife Stadium. It bridges the gap between stadium operations coordinators, stewards, and tournament spectators to optimize crowd security, concession queuing, post-match transportation routing, and accessibility services in real-time.
 
 By combining **NVIDIA cuDF (RAPIDS)** data aggregation principles (for sub-millisecond telemetry processing over millions of fan pings) with the **Google Cloud Platform Ecosystem (BigQuery, Cloud Storage, Gemini)** for warehouse logging and natural language decision support, CopaSync 2026 converts raw, high-velocity IoT streams into actionable tactical directives.
