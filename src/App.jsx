@@ -79,7 +79,6 @@ function App() {
 
   // References
   const canvasRef = useRef(null);
-  const API_BASE = window.location.origin; // Using relative routes for proxy or container mounts
 
   // Apply high contrast theme class
   useEffect(() => {
@@ -442,7 +441,7 @@ function App() {
       } else {
         throw new Error("Sync failed");
       }
-    } catch (e) {
+    } catch {
       // Offline fallback
       setTimeout(() => {
         addLogLine(`Emulated: Saved crowd log snapshot (4,589,022 bytes) in GCS bucket 'fifa-stadium-telemetry-archive'.`, 'success');
@@ -475,7 +474,7 @@ function App() {
       } else {
         throw new Error("Benchmark error");
       }
-    } catch (e) {
+    } catch {
       // Local fallback simulation
       setTimeout(() => {
         const cpuTime = Math.round((dataSize / 1000000) * 820 * (1 + Math.random() * 0.1));
@@ -545,7 +544,7 @@ function App() {
       } else {
         throw new Error("API chatbot error");
       }
-    } catch (e) {
+    } catch {
       // Local fallback simulator logic based on query topics
       setTimeout(() => {
         let title = "CopaAI Concierge Advisor";
