@@ -38,6 +38,7 @@ function App() {
   const [warningThreshold, setWarningThreshold] = useState(70);
   const [benchmarkResult, setBenchmarkResult] = useState({
     status: "idle",
+    data_size: 1000000,
     cpu: { execution_time_ms: 820, engine: "Pandas (CPU)", critical_count: 12890, hotspots_detected: 35 },
     gpu: { execution_time_ms: 8.1, engine: "NVIDIA cuDF (GPU)", critical_count: 12890, hotspots_detected: 35, is_live_gpu: false },
     acceleration: { speedup_multiplier: 101.2, time_saved_ms: 811.9, savings_usd: 124.50, co2_saved_kg: 1.02 },
@@ -1052,7 +1053,7 @@ critical_zones = df_gpu[
                         🚀 {benchmarkResult.acceleration.speedup_multiplier}x Speedup
                       </div>
                       <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
-                        NVIDIA cuDF parallelized loops aggregate {benchmarkResult.data_size.toLocaleString()} events in {benchmarkResult.gpu.execution_time_ms}ms instead of {benchmarkResult.cpu.execution_time_ms}ms.
+                        NVIDIA cuDF parallelized loops aggregate {(benchmarkResult.data_size || 1000000).toLocaleString()} events in {benchmarkResult.gpu.execution_time_ms}ms instead of {benchmarkResult.cpu.execution_time_ms}ms.
                       </span>
                     </div>
 
