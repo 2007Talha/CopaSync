@@ -1,0 +1,27 @@
+# Node dependency and build outputs
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Python cache & testing files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+venv/
+ENV/
+env/
+
+# Environment configurations and keys
+.env
+.env.local
+.env.production
+.env.development
+
+# Editor/OS configurations
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
