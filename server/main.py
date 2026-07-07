@@ -175,9 +175,9 @@ def get_benchmark_df(size: int) -> pd.DataFrame:
     """
     global MASTER_DF
     if MASTER_DF is None:
-        # Pre-generate 1,000,000 telemetry pings lazily
-        MASTER_DF = generate_synthetic_pings(1000000)
-    if size <= 1000000:
+        # Pre-generate 5,000,000 telemetry pings lazily
+        MASTER_DF = generate_synthetic_pings(5000000)
+    if size <= 5000000:
         return MASTER_DF.iloc[:size]
     else:
         return generate_synthetic_pings(size)
@@ -376,18 +376,22 @@ def sync_telemetry_assets(req: SyncRequest):
     if req.sync_to_gcs:
         if GCP_SDK_AVAILABLE:
             try:
-                # Real GCS upload integration
+                # Real GCS upload integration in Parquet format
                 storage_client = storage.Client()
                 df_sample = get_benchmark_df(100)
-                csv_data = df_sample.to_csv(index=False)
+                # Convert category columns to string for Parquet compatibility
+                df_sample_pq = df_sample.copy()
+                df_sample_pq["device_type"] = df_sample_pq["device_type"].astype(str)
+                df_sample_pq["section"] = df_sample_pq["section"].astype(str)
+                parquet_data = df_sample_pq.to_parquet(index=False)
                 
                 bucket = storage_client.bucket(bucket_name)
-                blob_name = f"logs_batch_{int(time.time())}.csv"
+                blob_name = f"logs_batch_{int(time.time())}.parquet"
                 blob = bucket.blob(blob_name)
-                blob.upload_from_string(csv_data.encode("utf-8"), content_type="text/csv")
+                blob.upload_from_string(parquet_data, content_type="application/octet-stream")
                 
                 gcs_status = f"Success: Processed telemetry exported to gs://{bucket_name}/{blob_name}"
-                bytes_uploaded = len(csv_data)
+                bytes_uploaded = len(parquet_data)
             except Exception as _e:
                 # Fallback to high-fidelity mock if credentials missing or bucket unavailable
                 gcs_status = f"Mocked (GCP SDK Installed, missing credentials): Streaming logs to GCS bucket '{bucket_name}'"
